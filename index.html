@@ -204,9 +204,198 @@ footer p { opacity: .8; }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ==================== МОБИЛЬНАЯ АДАПТАЦИЯ ==================== */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+  
+  .header-inner {
+    height: 60px;
+  }
+  
+  .logo {
+    font-size: 20px;
+  }
+  
+  /* Навигация для мобильных */
+  nav {
+    display: none; /* Скрываем обычную навигацию на мобильных */
+  }
+  
+  .mobile-menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--blue);
+    cursor: pointer;
+  }
+  
+  /* Герой-секция для мобильных */
+  .hero-slide {
+    min-height: 360px;
+    padding: 40px 0;
+  }
+  
+  .hero h1 {
+    font-size: 32px;
+    line-height: 1.2;
+  }
+  
+  .hero p {
+    font-size: 16px;
+  }
+  
+  .hero .btn {
+    padding: 12px 22px;
+    font-size: 15px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* Преимущества для мобильных */
+  .advantages {
+    padding: 50px 0;
+  }
+  
+  .advantages h2 {
+    font-size: 28px;
+    text-align: center;
+  }
+  
+  .advantages-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .adv {
+    padding: 20px;
+  }
+  
+  /* Товары для мобильных */
+  .products {
+    padding: 50px 0;
+  }
+  
+  .products h2 {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .product {
+    padding: 16px;
+  }
+  
+  .product-img {
+    height: 140px;
+  }
+  
+  /* Футер для мобильных */
+  footer {
+    padding: 30px 0;
+    margin-top: 40px;
+    text-align: center;
+  }
+  
+  footer p {
+    font-size: 14px;
+    padding: 0 10px;
+  }
+}
+
+/* Адаптация для очень маленьких экранов */
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 26px;
+  }
+  
+  .hero p {
+    font-size: 15px;
+  }
+  
+  .hero .btn {
+    padding: 14px 20px;
+    font-size: 16px;
+  }
+  
+  .products h2,
+  .advantages h2 {
+    font-size: 24px;
+  }
+  
+  .price {
+    font-size: 16px;
+  }
+  
+  .buy {
+    padding: 14px;
+    font-size: 15px;
+  }
+}
+
+/* Мобильное меню (добавляем в HTML) */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  background: white;
+  z-index: 99;
+  padding: 20px;
+  box-shadow: 0 10px 20px rgba(0,0,0,.1);
+}
+
+.mobile-menu.active {
+  display: block;
+}
+
+.mobile-menu a {
+  display: block;
+  padding: 12px 0;
+  text-decoration: none;
+  color: #444;
+  font-weight: 500;
+  border-bottom: 1px solid #eee;
+}
+
+.mobile-menu a:last-child {
+  border-bottom: none;
+}
+
+.mobile-menu a:hover {
+  color: var(--blue);
+}
+
+/* Показываем кнопку меню на мобильных */
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+}
+
+/* Скрываем кнопку меню на десктопах */
+@media (min-width: 769px) {
+  .mobile-menu-toggle {
+    display: none;
+  }
+  
+  .mobile-menu {
+    display: none !important;
+  }
+}
+
   </style>
 </head>
-<body><header>
+<body>
+<header>
   <div class="container header-inner">
     <div class="logo">Мотоангар</div>
     <nav>
@@ -215,8 +404,19 @@ footer p { opacity: .8; }
       <a href="#">Доставка</a>
       <a href="#">Контакты</a>
     </nav>
+    <button class="mobile-menu-toggle">☰</button>
   </div>
-</header><section class="hero">
+</header>
+
+<!-- Мобильное меню -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">Каталог</a>
+  <a href="#">О производстве</a>
+  <a href="#">Доставка</a>
+  <a href="#">Контакты</a>
+</div>
+
+<section class="hero">
 <div class="container hero-slide">
     <div>
       <h1>Запчасти для мотобуксировщиков и снегоходов</h1>
@@ -280,5 +480,21 @@ footer p { opacity: .8; }
   <div class="container">
     <p>© Мотоангар, 2026. Запчасти собственного производства.</p>
   </div>
-</footer></body>
+</footer>
+
+<script>
+  // Простой скрипт для мобильного меню
+  document.querySelector('.mobile-menu-toggle').addEventListener('click', function() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenu.classList.toggle('active');
+  });
+  
+  // Закрываем меню при клике на ссылку
+  document.querySelectorAll('.mobile-menu a').forEach(link => {
+    link.addEventListener('click', function() {
+      document.getElementById('mobileMenu').classList.remove('active');
+    });
+  });
+</script>
+</body>
 </html>
