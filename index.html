@@ -54,47 +54,121 @@ nav a {
 
 nav a:hover { color: var(--blue); }
 
-/* HERO */
+/* HERO СЛАЙДЕР */
 .hero {
   position: relative;
-  background: linear-gradient(120deg, var(--blue), var(--blue-dark));
+  background: #0b1a3a; /* fallback */
   color: white;
   overflow: hidden;
 }
 
-.hero-slide {
+.slider-container {
+  position: relative;
+  width: 100%;
+}
+
+.slider-track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.slide {
+  flex: 0 0 100%;
   min-height: 420px;
   display: flex;
   align-items: center;
-  animation: fadeIn 1s ease;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
 }
 
-.hero h1 {
+/* Затемнение для читаемости текста */
+.slide::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.slide .container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.slide h1 {
   font-size: 42px;
   margin-bottom: 16px;
+  max-width: 600px;
 }
 
-.hero p {
+.slide p {
   font-size: 18px;
   max-width: 520px;
   opacity: 0.95;
 }
 
-.hero .btn {
-  display: inline-block;
-  margin-top: 28px;
-  background: white;
-  color: var(--blue);
-  padding: 14px 26px;
-  border-radius: 10px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: transform .2s, box-shadow .2s;
+/* Кнопки управления слайдером */
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  border: 1px solid rgba(255,255,255,0.3);
 }
 
-.hero .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+.slider-btn:hover {
+  background: rgba(255,255,255,0.4);
+}
+
+.slider-btn.prev {
+  left: 20px;
+}
+
+.slider-btn.next {
+  right: 20px;
+}
+
+/* Индикаторы (точки) */
+.slider-dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: background 0.2s;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.dot.active {
+  background: white;
+  transform: scale(1.2);
 }
 
 /* ADVANTAGES */
@@ -218,9 +292,8 @@ footer p { opacity: .8; }
     font-size: 20px;
   }
   
-  /* Навигация для мобильных */
   nav {
-    display: none; /* Скрываем обычную навигацию на мобильных */
+    display: none;
   }
   
   .mobile-menu-toggle {
@@ -232,29 +305,39 @@ footer p { opacity: .8; }
     cursor: pointer;
   }
   
-  /* Герой-секция для мобильных */
-  .hero-slide {
+  .slide {
     min-height: 360px;
     padding: 40px 0;
   }
   
-  .hero h1 {
+  .slide h1 {
     font-size: 32px;
     line-height: 1.2;
   }
   
-  .hero p {
+  .slide p {
     font-size: 16px;
   }
   
-  .hero .btn {
-    padding: 12px 22px;
-    font-size: 15px;
-    width: 100%;
-    text-align: center;
+  .slider-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
   }
   
-  /* Преимущества для мобильных */
+  .slider-btn.prev {
+    left: 8px;
+  }
+  
+  .slider-btn.next {
+    right: 8px;
+  }
+  
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+  
   .advantages {
     padding: 50px 0;
   }
@@ -273,7 +356,6 @@ footer p { opacity: .8; }
     padding: 20px;
   }
   
-  /* Товары для мобильных */
   .products {
     padding: 50px 0;
   }
@@ -297,7 +379,6 @@ footer p { opacity: .8; }
     height: 140px;
   }
   
-  /* Футер для мобильных */
   footer {
     padding: 30px 0;
     margin-top: 40px;
@@ -310,19 +391,13 @@ footer p { opacity: .8; }
   }
 }
 
-/* Адаптация для очень маленьких экранов */
 @media (max-width: 480px) {
-  .hero h1 {
+  .slide h1 {
     font-size: 26px;
   }
   
-  .hero p {
+  .slide p {
     font-size: 15px;
-  }
-  
-  .hero .btn {
-    padding: 14px 20px;
-    font-size: 16px;
   }
   
   .products h2,
@@ -340,7 +415,6 @@ footer p { opacity: .8; }
   }
 }
 
-/* Мобильное меню (добавляем в HTML) */
 .mobile-menu {
   display: none;
   position: fixed;
@@ -374,14 +448,12 @@ footer p { opacity: .8; }
   color: var(--blue);
 }
 
-/* Показываем кнопку меню на мобильных */
 @media (max-width: 768px) {
   .mobile-menu-toggle {
     display: block;
   }
 }
 
-/* Скрываем кнопку меню на десктопах */
 @media (min-width: 769px) {
   .mobile-menu-toggle {
     display: none;
@@ -416,15 +488,43 @@ footer p { opacity: .8; }
   <a href="#">Контакты</a>
 </div>
 
+<!-- СЛАЙДЕР (баннер с картинками и без кнопки) -->
 <section class="hero">
-<div class="container hero-slide">
-    <div>
-      <h1>Запчасти для мотобуксировщиков и снегоходов</h1>
-      <p>Собственное производство. Контроль качества на каждом этапе. Надёжные решения для суровых условий эксплуатации.</p>
-      <a class="btn" href="#">Перейти в каталог</a>
+  <div class="slider-container">
+    <div class="slider-track" id="sliderTrack">
+      <!-- Слайд 1 -->
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1597423498212-6f606cc87f0b?q=80&w=2070&auto=format&fit=crop')">
+        <div class="container">
+          <h1>Запчасти для мотобуксировщиков и снегоходов</h1>
+          <p>Собственное производство. Контроль качества на каждом этапе. Надёжные решения для суровых условий эксплуатации.</p>
+        </div>
+      </div>
+      <!-- Слайд 2 -->
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1635773054016-3c5c7b7e8d0e?q=80&w=1932&auto=format&fit=crop')">
+        <div class="container">
+          <h1>Вездеходные комплектующие</h1>
+          <p>Усиленные рамы, амортизаторы, гусеничные ленты — всё для бездорожья.</p>
+        </div>
+      </div>
+      <!-- Слайд 3 -->
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=2070&auto=format&fit=crop')">
+        <div class="container">
+          <h1>Надёжность в каждой детали</h1>
+          <p>Собственное производство, контроль качества, быстрая доставка по России.</p>
+        </div>
+      </div>
     </div>
+    
+    <!-- Кнопки управления -->
+    <button class="slider-btn prev" id="prevBtn">❮</button>
+    <button class="slider-btn next" id="nextBtn">❯</button>
+    
+    <!-- Индикаторы -->
+    <div class="slider-dots" id="sliderDots"></div>
   </div>
-</section><section class="advantages">
+</section>
+
+<section class="advantages">
   <div class="container">
     <h2>Почему выбирают Мотоангар</h2>
     <div class="advantages-grid">
@@ -446,7 +546,9 @@ footer p { opacity: .8; }
       </div>
     </div>
   </div>
-</section><section class="products">
+</section>
+
+<section class="products">
   <div class="container">
     <h2>Популярные запчасти</h2>
     <div class="product-grid">
@@ -476,25 +578,82 @@ footer p { opacity: .8; }
       </div>
     </div>
   </div>
-</section><footer>
+</section>
+
+<footer>
   <div class="container">
     <p>© Мотоангар, 2026. Запчасти собственного производства.</p>
   </div>
 </footer>
 
 <script>
-  // Простой скрипт для мобильного меню
+  // Мобильное меню
   document.querySelector('.mobile-menu-toggle').addEventListener('click', function() {
-    const mobileMenu = document.getElementById('mobileMenu');
-    mobileMenu.classList.toggle('active');
+    document.getElementById('mobileMenu').classList.toggle('active');
   });
   
-  // Закрываем меню при клике на ссылку
   document.querySelectorAll('.mobile-menu a').forEach(link => {
     link.addEventListener('click', function() {
       document.getElementById('mobileMenu').classList.remove('active');
     });
   });
+  
+  // Слайдер
+  const sliderTrack = document.getElementById('sliderTrack');
+  const slides = document.querySelectorAll('.slide');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const dotsContainer = document.getElementById('sliderDots');
+  
+  let currentIndex = 0;
+  const totalSlides = slides.length;
+  
+  // Создаем точки
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('span');
+    dot.classList.add('dot');
+    dot.dataset.index = i;
+    dot.addEventListener('click', () => goToSlide(i));
+    dotsContainer.appendChild(dot);
+  }
+  
+  const dots = document.querySelectorAll('.dot');
+  
+  function updateSlider() {
+    sliderTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+    dots.forEach((dot, idx) => {
+      if (idx === currentIndex) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+  
+  function goToSlide(index) {
+    if (index < 0) index = totalSlides - 1;
+    if (index >= totalSlides) index = 0;
+    currentIndex = index;
+    updateSlider();
+  }
+  
+  function nextSlide() {
+    goToSlide(currentIndex + 1);
+  }
+  
+  function prevSlide() {
+    goToSlide(currentIndex - 1);
+  }
+  
+  prevBtn.addEventListener('click', prevSlide);
+  nextBtn.addEventListener('click', nextSlide);
+  
+  // Автоматическое переключение каждые 5 секунд
+  setInterval(nextSlide, 5000);
+  
+  // Инициализация
+  updateSlider();
 </script>
+
 </body>
 </html>
